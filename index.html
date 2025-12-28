@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карточки пользователей</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+            font-size: 18px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .filter-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .stat-item {
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .users-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .user-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .user-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .user-header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .user-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .status-active {
+            background-color: #2ecc71;
+        }
+
+        .status-inactive {
+            background-color: #e74c3c;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            margin: 0 auto 15px;
+            background-color: #ecf0f1;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .user-position {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .user-body {
+            padding: 25px 20px;
+            flex-grow: 1;
+        }
+
+        .user-info {
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .info-item i {
+            width: 24px;
+            color: #3498db;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .user-skills {
+            margin-top: 20px;
+        }
+
+        .skills-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background-color: #e8f4fc;
+            color: #3498db;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-footer {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .contact-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .users-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Наша команда</h1>
+            <p class="subtitle">Познакомьтесь с нашими талантливыми специалистами</p>
+        </header>
+        
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Поиск по имени, должности или навыкам...">
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="active">Активные</button>
+                <button class="filter-btn" data-filter="inactive">Неактивные</button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <span>Всего пользователей: <span id="totalUsers">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-user-check"></i>
+                <span>Активных: <span id="activeUsers">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-user-clock"></i>
+                <span>Неактивных: <span id="inactiveUsers">0</span></span>
+            </div>
+        </div>
+        
+        <div class="users-container" id="usersContainer">
+            <!-- Карточки пользователей будут вставлены сюда -->
+        </div>
+    </div>
+
+    <script>
+        // Массив пользователей
+        const users = [
+            {
+                id: 1,
+                name: "Иван Иванов",
+                age: 28,
+                email: "ivan@example.com",
+                phone: "+7 (123) 456-78-90",
+                position: "Frontend разработчик",
+                skills: ["JavaScript", "React", "CSS", "HTML5", "Vue.js"],
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                status: "active"
+            },
+            {
+                id: 2,
+                name: "Мария Петрова",
+                age: 25,
+                email: "maria@example.com",
+                phone: "+7 (987) 654-32-10",
+                position: "Дизайнер UX/UI",
+                skills: ["Figma", "Photoshop", "Illustrator", "Adobe XD"],
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                status: "active"
+            },
+            {
+                id: 3,
+                name: "Алексей Смирнов",
+                age: 32,
+                email: "alex@example.com",
+                phone: "+7 (555) 123-45-67",
+                position: "Backend разработчик",
+                skills: ["Python", "Django", "PostgreSQL", "Docker", "Node.js"],
+                avatar: "https://randomuser.me/api/portraits/men/67.jpg",
+                status: "inactive"
+            },
+            {
+                id: 4,
+                name: "Елена Кузнецова",
+                age: 29,
+                email: "elena@example.com",
+                phone: "+7 (999) 888-77-66",
+                position: "Менеджер проектов",
+                skills: ["Scrum", "Jira", "Agile", "Командообразование"],
+                avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+                status: "active"
+            },
+            {
+                id: 5,
+                name: "Дмитрий Васильев",
+                age: 35,
+                email: "dmitry@example.com",
+                phone: "+7 (111) 222-33-44",
+                position: "DevOps инженер",
+                skills: ["AWS", "Kubernetes", "Terraform", "CI/CD", "Linux"],
+                avatar: "https://randomuser.me/api/portraits/men/75.jpg",
+                status: "active"
+            },
+            {
+                id: 6,
+                name: "Анна Соколова",
+                age: 27,
+                email: "anna@example.com",
+                phone: "+7 (444) 555-66-77",
+                position: "Тестировщик QA",
+                skills: ["Selenium", "JUnit", "Postman", "TestRail", "SQL"],
+                avatar: "https://randomuser.me/api/portraits/women/26.jpg",
+                status: "inactive"
+            }
+        ];
+
+        // Переменные для управления состоянием
+        let filteredUsers = [...users];
+        let currentFilter = "all";
+        let currentSearch = "";
+
+        // Функция для обновления статистики
+        function updateStats() {
+            const total = users.length;
+            const active = users.filter(user => user.status === "active").length;
+            const inactive = users.filter(user => user.status === "inactive").length;
+            
+            document.getElementById("totalUsers").textContent = total;
+            document.getElementById("activeUsers").textContent = active;
+            document.getElementById("inactiveUsers").textContent = inactive;
+        }
+
+        // Функция для создания HTML карточки пользователя
+        function createUserCard(user) {
+            return `
+                <div class="user-card" data-user-id="${user.id}" data-status="${user.status}">
+                    <div class="user-header">
+                        <div class="user-status ${user.status === 'active' ? 'status-active' : 'status-inactive'}"></div>
+                        <img src="${user.avatar}" alt="${user.name}" class="user-avatar">
+                        <h2 class="user-name">${user.name}</h2>
+                        <p class="user-position">${user.position}</p>
+                    </div>
+                    
+                    <div class="user-body">
+                        <div class="user-info">
+                            <div class="info-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <span>${user.age} лет</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>${user.email}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <span>${user.phone}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="user-skills">
+                            <div class="skills-label">
+                                <i class="fas fa-code"></i>
+                                <span>Навыки:</span>
+                            </div>
+                            <div class="skills-list">
+                                ${user.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-footer">
+                        <button class="contact-btn" onclick="contactUser(${user.id})">
+                            <i class="fas fa-paper-plane"></i>
+                            Написать
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Функция для отображения карточек пользователей
+        function renderUsers() {
+            const container = document.getElementById("usersContainer");
+            
+            if (filteredUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-user-slash fa-3x" style="margin-bottom: 20px;"></i>
+                        <h3>Пользователи не найдены</h3>
+                        <p>Попробуйте изменить критерии поиска или фильтр</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredUsers.map(user => createUserCard(user)).join('');
+        }
+
+        // Функция для фильтрации пользователей
+        function filterUsers() {
+            filteredUsers = users.filter(user => {
+                // Применяем фильтр по статусу
+                if (currentFilter !== "all" && user.status !== currentFilter) {
+                    return false;
+                }
+                
+                // Применяем поиск
+                if (currentSearch.trim() !== "") {
+                    const searchTerm = currentSearch.toLowerCase();
+                    const searchFields = [
+                        user.name.toLowerCase(),
+                        user.position.toLowerCase(),
+                        ...user.skills.map(skill => skill.toLowerCase())
+                    ];
+                    
+                    return searchFields.some(field => field.includes(searchTerm));
+                }
+                
+                return true;
+            });
+            
+            renderUsers();
+        }
+
+        // Функция для обработки поиска
+        function handleSearch() {
+            currentSearch = document.getElementById("searchInput").value.toLowerCase();
+            filterUsers();
+        }
+
+        // Функция для обработки фильтрации
+        function handleFilter(filter) {
+            currentFilter = filter;
+            
+            // Обновляем активные кнопки фильтра
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+            
+            filterUsers();
+        }
+
+        // Функция для контакта с пользователем
+        function contactUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                alert(`Отправка сообщения пользователю ${user.name} на email: ${user.email}`);
+                // В реальном приложении здесь была бы отправка формы или открытие чата
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener("DOMContentLoaded", function() {
+            // Инициализируем статистику
+            updateStats();
+            
+            // Отображаем всех пользователей
+            renderUsers();
+            
+            // Назначаем обработчики событий
+            document.getElementById("searchInput").addEventListener("input", handleSearch);
+            
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    handleFilter(this.dataset.filter);
+                });
+            });
+            
+            // Добавляем дебаунс для поиска (чтобы не фильтровать на каждый ввод)
+            let searchTimeout;
+            document.getElementById("searchInput").addEventListener("input", function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(handleSearch, 300);
+            });
+        });
+    </script>
+</body>
+</html>
