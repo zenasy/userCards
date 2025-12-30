@@ -14,10 +14,12 @@
         }
 
         body {
-            background-color: #f5f7fa;
+            background-color: #b5d0f8;
+            background-image: linear-gradient(to left, #1D2B64, #F8CDDA);
             color: #333;
             padding: 20px;
             line-height: 1.6;
+            
         }
 
         .container {
@@ -33,13 +35,13 @@
         }
 
         h1 {
-            color: #2c3e50;
+            color: #1a3d9c;
             margin-bottom: 10px;
             font-size: 2.5rem;
         }
 
         .subtitle {
-            color: #7f8c8d;
+            color: #c6cbff;
             font-size: 1.1rem;
         }
 
@@ -243,6 +245,16 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
+            
+        }
+        .diraction-tag {
+            background-color: #D1FAE5;
+            color: #065F46;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 15px;
         }
 
         .user-footer {
@@ -353,7 +365,8 @@
                 position: "Frontend разработчик",
                 skills: ["JavaScript", "React", "CSS", "HTML5", "Vue.js"],
                 avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-                status: "active"
+                status: "active",
+                direction: 'programming'
             },
             {
                 id: 2,
@@ -364,7 +377,8 @@
                 position: "Дизайнер UX/UI",
                 skills: ["Figma", "Photoshop", "Illustrator", "Adobe XD"],
                 avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-                status: "active"
+                status: "active",
+                direction: 'design'
             },
             {
                 id: 3,
@@ -375,7 +389,8 @@
                 position: "Backend разработчик",
                 skills: ["Python", "Django", "PostgreSQL", "Docker", "Node.js"],
                 avatar: "https://randomuser.me/api/portraits/men/67.jpg",
-                status: "inactive"
+                status: "inactive",
+                direction: 'biology'
             },
             {
                 id: 4,
@@ -386,7 +401,8 @@
                 position: "Менеджер проектов",
                 skills: ["Scrum", "Jira", "Agile", "Командообразование"],
                 avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-                status: "active"
+                status: "active",
+                direction: 'programming'
             },
             {
                 id: 5,
@@ -397,7 +413,8 @@
                 position: "DevOps инженер",
                 skills: ["AWS", "Kubernetes", "Terraform", "CI/CD", "Linux"],
                 avatar: "https://randomuser.me/api/portraits/men/75.jpg",
-                status: "active"
+                status: "active",
+                direction: 'programming'
             },
             {
                 id: 6,
@@ -408,7 +425,8 @@
                 position: "Тестировщик QA",
                 skills: ["Selenium", "JUnit", "Postman", "TestRail", "SQL"],
                 avatar: "https://randomuser.me/api/portraits/women/26.jpg",
-                status: "inactive"
+                status: "inactive",
+                direction: 'programming'
             }
         ];
 
@@ -461,6 +479,11 @@
                                 <span>Навыки:</span>
                             </div>
                             <div class="skills-list">
+                                <span class="diraction-tag">${user.direction}</span>
+                                
+                            </div>
+
+                            <div class="skills-list">
                                 ${user.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
                             </div>
                         </div>
@@ -509,6 +532,7 @@
                     const searchFields = [
                         user.name.toLowerCase(),
                         user.position.toLowerCase(),
+                        user.direction.toLowerCase(),
                         ...user.skills.map(skill => skill.toLowerCase())
                     ];
                     
